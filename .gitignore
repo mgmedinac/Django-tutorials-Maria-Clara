@@ -1,0 +1,15 @@
+# Evitar la carpeta del entorno virtual
+venv/
+
+# Evitar archivos temporales de Python
+__pycache__/
+*.pyc
+
+# Base de datos SQLite (opcional, solo si no quieres subirla)
+db.sqlite3
+
+# Archivos de configuración local
+*.env
+
+# Archivos de VSCode
+.vscode/

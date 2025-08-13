@@ -8,6 +8,17 @@ from django.core.exceptions import ValidationError
 from .models import Product
 
 
+
+class Contactview(View):
+    def get(self,request):
+        context = {
+            'email': 'contact@example.com',
+            'address': '123 calle falsa, Envigado',
+            'phone': '+57 319 728 9987',
+        }
+        return render(request, 'pages/contact.html', context)
+
+
 class HomePageView(TemplateView):
     template_name= 'pages/home.html'
     

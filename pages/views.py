@@ -55,25 +55,28 @@ class ProductIndexView(View):
 
 class ProductShowView(View):
     template_name = 'products/show.html'
+
     def get(self, request, id):
-        # Check if product id is valid
         try:
+            # Convertir id a entero
             product_id = int(id)
             if product_id < 1:
                 raise ValueError("Product id must be 1 or greater")
+            
+            # Intentar obtener el producto, si no existe se lanza Http404
             product = get_object_or_404(Product, pk=product_id)
-        except (ValueError, IndexError):
-            # If the product id is not valid, redirect to the home page
+
+        except (ValueError, Product.DoesNotExist):
+            # Redirigir a la home si el id no es válido o el producto no existe
             return HttpResponseRedirect(reverse('home'))
-        
-        viewData = {}
-        product = get_object_or_404(Product, pk=product_id)
-        viewData["title"] = product.name + " - Online Store"
-        viewData["subtitle"] = product.name + " - Product information"
-        viewData["product"] = product
+
+        viewData = {
+            "title": product.name + " - Online Store",
+            "subtitle": product.name + " - Product information",
+            "product": product
+        }
 
         return render(request, self.template_name, viewData)
-    
 
 
 class ProductListView(ListView):

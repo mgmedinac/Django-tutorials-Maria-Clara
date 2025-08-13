@@ -75,3 +75,40 @@ class productListView(ListView):
         context['title'] = 'Products - Online Store'
         context['subtitle'] = 'List of products'
         return context
+    
+
+class ProductForm(forms.ModelForm):
+    name = forms.CharField(required=True)
+    price = forms.FloatField(required=True)
+
+    class Meta:
+        model = Product
+        fields = ['name', 'price']
+
+    def clean_price(self):
+        price = self.cleaned_data.get('price')
+        if price is not None and price <= 0:
+            raise ValidationError('Price must be greater than cero.')
+        return price
+
+
+class productCreateView(View):
+    template_name = 'products/create.html'
+
+    def get(self, request):
+        form = ProductForm()
+        viewData = {}
+        viewData["title"] = "Create product"
+        viewData["form"] = form
+        return render(request, self.template_name, viewData)
+
+    def post(self, request):
+        form = ProductForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('product-created')  
+        else:
+            viewData = {}
+            viewData["title"] = "Create product"
+            viewData["form"] = form
+            return render(request, self.template_name, viewData)
